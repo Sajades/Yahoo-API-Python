@@ -9,7 +9,7 @@ msft.info
 import yfinance as yf
 import os
 import pandas as pd
-WorkingDirectory='D:/Sajad/advance get/Global Stock'
+WorkingDirectory='set your WorkingDirecotory Here'
 os.chdir(WorkingDirectory)
 # ___________________________ Single Symbol ______________________
 def Ticker(symbol):
@@ -22,7 +22,9 @@ def Ticker(symbol):
     df['Date']=string_date
     df.to_csv(WorkingDirectory+'/'+symbol+'.csv', index=False)
 # ___________________________ Market Data ______________________
+# you can provide a list of Tickers to get their market data
 def Market(symbols,remove=True):
+    # Warning if remove == True this part removes all files in your WorkingDirectory
     if remove == True:
         folder = WorkingDirectory
         for the_file in os.listdir(folder):
@@ -30,22 +32,18 @@ def Market(symbols,remove=True):
             try:
                 if os.path.isfile(file_path):
                     os.unlink(file_path)
-                #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+                
             except Exception as e:
                 print(e)
 
     for tiker in symbols:
         Ticker(tiker)
 # ___________________________ Intraday _____________________________________    
-string_date=pd.read_csv('D:/Sajad/advance get/VirtuTime.csv')    
+   
 def intraday(symbol,Interval='60m',period='3mo'):
     df_1h = yf.download(symbol,period=period,interval =Interval)
-    del df_1h['Adj Close']
-    df_1h=df_1h.reset_index()
-    #global string_date
-    
-    #string_date=pd.read_csv('D:/Sajad/advance get/VirtuTime.csv')
-    df_1h['Datetime']=string_date[:len(df_1h)]
+   
+   # save data with Ticker name in the working directory
     df_1h.to_csv(WorkingDirectory+'/'+symbol+Interval+'.csv', index=False)
 
 #______________________________________________All_____________________________
